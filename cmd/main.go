@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"../pkg/files"
+	"github.com/Protezeusz/tictactoe/pkg/files"
 
 	"github.com/gin-gonic/gin"
 )
