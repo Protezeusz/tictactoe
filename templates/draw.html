@@ -1,5 +1,5 @@
 <!-- https://stackoverflow.com/questions/2368784/draw-on-html5-canvas-using-a-mouse -->
-<html>
+<!DOCTYPE html>
 <script type="text/javascript">
     var canvas, ctx, flag = false,
         prevX = 0,
@@ -70,11 +70,8 @@
     }
 
     function erase() {
-        // var m = confirm("Want to clear");
-        // if (m) {
         ctx.clearRect(0, 0, w, h);
         document.getElementById("canvasimg").style.display = "none";
-        // }
 
         board();
     }
@@ -85,10 +82,15 @@
 
         const xhttp = new XMLHttpRequest();
         xhttp.open("POST", "http://127.0.0.1:8080/", true);
-        xhttp.send(dataURL);
+        xhttp.responseType = "blob";
+        xhttp.onload = function(e) {
+            var urlCreator = window.URL || window.webkitURL;
+            var newDataURL = urlCreator.createObjectURL(this.response);
+            document.getElementById("canvasimg").src = newDataURL;
+            document.getElementById("canvasimg").style.display = "inline";
+        }
 
-        document.getElementById("canvasimg").src = dataURL;
-        document.getElementById("canvasimg").style.display = "inline";
+        xhttp.send(dataURL);
     }
 
     function findxy(res, e) {
@@ -127,8 +129,10 @@
 <body onload="init()">
     <img id="canvasimg" style="position:absolute;top:40px;left:40px;" style="display:none;">
     <canvas id="can" width="300" height="300" style="position:absolute;top:40px;left:40px;border:0px solid;"></canvas>
-    <input type="button" value="save" id="btn" size="30" onclick="save()" style="position:absolute;top:60%;left:10%;">
-    <input type="button" value="clear" id="clr" size="23" onclick="erase()" style="position:absolute;top:60%;left:20%;">
+    <input type="button" value="end turn" id="btn" size="30" onclick="save()"
+        style="position:absolute;top:350px;left:110px;">
+    <input type="button" value="clear" id="clr" size="23" onclick="erase()"
+        style="position:absolute;top:350px;left:220px;">
 </body>
 
 </html>
