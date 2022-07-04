@@ -5,14 +5,17 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Protezeusz/tictactoe/pkg/files"
+	"github.com/Protezeusz/tictactoe/pkg/board"
+	"github.com/Protezeusz/tictactoe/pkg/helper"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	file := files.NewIOFile("board.png")
+
+	board := board.New()
+
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
@@ -20,22 +23,36 @@ func main() {
 	}))
 
 	r.POST("/", func(c *gin.Context) {
-		requestBody, err := ioutil.ReadAll(c.Request.Body)
-		if err != nil {
-			log.Fatalf("failed: %s", err)
-			c.String(http.StatusBadRequest, "Invalid body.")
+
+		requestBody, readErr := ioutil.ReadAll(c.Request.Body)
+		if readErr != nil {
+			log.Fatalf("failed: %s", readErr)
+			c.String(http.StatusBadRequest, "Bad request.")
 		}
 
-		errIMg := file.SaveRequestImage(requestBody)
-		if errIMg != nil {
-			log.Fatalf("failed save: %s", err)
-			c.String(http.StatusInternalServerError, "Internal server error.")
+		img, getImgErr := helper.GetImageFromHttp(requestBody)
+		if getImgErr != nil {
+			log.Fatalf("failed decode image request: %s", getImgErr)
+			c.String(http.StatusInternalServerError, "Internal Server Error.")
+		}
+
+		updatErr := board.UpdateBoard(img)
+		if updatErr != nil {
+			log.Fatalf("failed: %s", updatErr)
+			c.String(http.StatusInternalServerError, "Internal Server Error.")
 		}
 
 		// play game
-
 		// response
-		c.File("rectangle.png")
+		byteImage, getErr := helper.GetHttpFromImage(img)
+		if getErr != nil {
+			log.Fatalf("failed: %s", getErr)
+			c.String(http.StatusInternalServerError, "Internal Server Error.")
+		}
+
+		c.Header("Content-Disposition", "attachment; filename=file-name.txt")
+		c.Data(http.StatusOK, "data:image/png;base64", byteImage)
+		c.String(http.StatusOK, "ok")
 	})
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
