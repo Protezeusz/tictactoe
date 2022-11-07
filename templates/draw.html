@@ -9,7 +9,7 @@
         dot_flag = false;
 
     var x = "black",
-        y = 2;
+        y = 1;
 
     function init() {
 
@@ -31,34 +31,34 @@
             findxy('out', e)
         }, false);
 
-        board();
+        // board();
     }
 
-    function board() {
-        prevX = 100;
-        prevY = 0;
-        currX = 100;
-        currY = 300;
-        draw();
+    // function board() {
+    //     prevX = 100;
+    //     prevY = 0;
+    //     currX = 100;
+    //     currY = 300;
+    //     draw();
 
-        prevX = 200;
-        prevY = 0;
-        currX = 200;
-        currY = 300;
-        draw();
+    //     prevX = 200;
+    //     prevY = 0;
+    //     currX = 200;
+    //     currY = 300;
+    //     draw();
 
-        prevX = 0;
-        prevY = 100;
-        currX = 300;
-        currY = 100;
-        draw();
+    //     prevX = 0;
+    //     prevY = 100;
+    //     currX = 300;
+    //     currY = 100;
+    //     draw();
 
-        prevX = 0;
-        prevY = 200;
-        currX = 300;
-        currY = 200;
-        draw();
-    }
+    //     prevX = 0;
+    //     prevY = 200;
+    //     currX = 300;
+    //     currY = 200;
+    //     draw();
+    // }
 
     function draw() {
         ctx.beginPath();
@@ -72,7 +72,7 @@
 
     function erase() {
         ctx.clearRect(0, 0, w, h);
-        board();
+        // board();
     }
 
     function save() {
@@ -123,6 +123,7 @@
 </script>
 
 <body onload="init()">
+    <img id="board", src="board.png" style="position:absolute;top:40px;left:40px;border:0px solid;"/>
     <canvas id="can" width="300" height="300" style="position:absolute;top:40px;left:40px;border:0px solid;"></canvas>
     <input type="button" value="end turn" id="btn" size="30" onclick="save()"
         style="position:absolute;top:350px;left:110px;">

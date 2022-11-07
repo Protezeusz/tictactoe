@@ -43,8 +43,14 @@ func main() {
 		}
 
 		// play game
+		newImg, playErr := board.Play(img)
+		if playErr != nil {
+			log.Fatalf("failed: %s", updatErr)
+			c.String(http.StatusInternalServerError, "Internal Server Error.")
+		}
+
 		// response
-		byteImage, getErr := helper.GetHttpFromImage(img)
+		byteImage, getErr := helper.GetHttpFromImage(newImg)
 		if getErr != nil {
 			log.Fatalf("failed: %s", getErr)
 			c.String(http.StatusInternalServerError, "Internal Server Error.")
